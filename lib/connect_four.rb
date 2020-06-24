@@ -1,5 +1,10 @@
 
 class Game
+  attr_reader :board
+
+  def initialize(board = build_board)
+    @board = board
+  end
   
   def build_board
     board = {}

@@ -3,6 +3,19 @@ require './lib/connect_four.rb'
 describe Game do
   subject { Game.new }
 
+  describe "#initialize" do
+    
+    it "sets up a new Game obj" do
+      expect(subject).to be_kind_of(Game)
+    end
+
+    it "has builds a board on creation and assigns it to instance variable" do
+      expect(subject.board).not_to be_nil
+      expect(subject.board).to be_kind_of(Hash)
+    end
+
+  end
+
   xdescribe "#build_board" do
     let(:board) { subject.build_board}
 
