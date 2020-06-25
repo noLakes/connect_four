@@ -9,14 +9,14 @@ describe Game do
       expect(subject).to be_kind_of(Game)
     end
 
-    it "has builds a board on creation and assigns it to instance variable" do
+    it "builds a board on creation and assigns it to instance variable" do
       expect(subject.board).not_to be_nil
       expect(subject.board).to be_kind_of(Hash)
     end
 
   end
 
-  xdescribe "#build_board" do
+  describe "#build_board" do
     let(:board) { subject.build_board}
 
     it "returns a hash" do
@@ -43,6 +43,23 @@ describe Game do
     it "has initial values as nil" do
       expect(board.values).to all(be_nil)
     end
+  end
+
+  describe "#txt" do
+    let(:text) { subject.txt}
+
+    it "returns a string" do
+      expect(text).to be_kind_of(String)
+    end
+
+    it "represents game cells as [  ]" do
+      expect(text).to match(/[  ]/)
+    end
+
+    it "is formatted using new lines" do
+      expect(text).to match(/\n/)
+    end
+
   end
 
 end

@@ -16,4 +16,13 @@ class Game
     board
   end
 
+  def txt
+    output = []
+    @board.each_pair do |key, val| 
+      val.nil? ? output << '[  ]' : output << val
+      output << "\n" if key[1] == 7
+    end
+    output.join()
+  end
+
 end
