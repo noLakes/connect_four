@@ -107,4 +107,93 @@ describe Game do
     
   end
 
+  describe "#column_full?" do
+    
+    it "returns true when a column is full" do
+      6.times { subject.place_token(1) }
+      expect(subject.column_full?(1)).to be_truthy
+    end
+
+    it "returns false when a column is not full" do
+      3.times { subject.place_token(1) }
+      expect(subject.column_full?(1)).to be_falsy
+    end
+  end
+
+  describe "#get_move" do
+
+    context "when given input within correct range (1 - 7)" do
+
+      it "asks for input once" do
+        allow(subject).to receive(:gets) { "5" }
+        expect { subject.get_move }.to output.to_stdout
+      end
+
+      it "returns input as an integer" do
+        allow(subject).to receive(:gets) { "5" }
+        expect(subject.get_move).to eql(5)
+      end
+
+    end
+
+    it "works with place_token" do
+      allow(subject).to receive(:gets) { "5" }
+      subject.place_token(subject.get_move)
+      expect(subject.board[[1, 5]]).not_to be_nil
+    end
+
+    it "checks for full columns" do
+      5.times { subject.place_token(1) }
+      called = false
+      allow(subject).to receive(:gets) { "1" }
+      expect(subject).to receive(:column_full?).with(1)
+      subject.get_move
+    end
+
+  end
+
+  describe "#switch_turn" do
+
+    it "can change current player from 1, to 2" do
+      subject.switch_turn
+      expect(subject.turn).to eql(2)
+    end
+
+    it "can change current player from 2, to 1" do
+      subject.switch_turn
+      subject.switch_turn
+      expect(subject.turn).to eql(1)
+    end
+
+  end
+
+  describe "#multi_move" do
+
+    it "can place several moves" do
+      subject.multi_move(1, 2, 3, 4, 5, 6)
+      expect(subject.board[[1, 1]]).not_to be_nil
+      expect(subject.board[[1, 2]]).not_to be_nil
+      expect(subject.board[[1, 3]]).not_to be_nil
+      expect(subject.board[[1, 4]]).not_to be_nil
+      expect(subject.board[[1, 5]]).not_to be_nil
+      expect(subject.board[[1, 6]]).not_to be_nil
+    end
+  end
+
+  describe "#check_win" do
+
+    context "win condition is true" do
+      
+      it "returns true for horizontal win" do
+        subject.multi_move(1, 1, 2, 1, 3, 1, 4)
+        expect(subject.check_win).to eql(true)
+      end
+
+    end
+
+    context "win condition is false" do
+
+    end
+  end
+
 end
