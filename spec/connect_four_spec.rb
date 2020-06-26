@@ -186,7 +186,17 @@ describe Game do
       
       it "returns true for horizontal win" do
         subject.multi_move(1, 1, 2, 1, 3, 1, 4)
-        expect(subject.check_win).to eql(true)
+        expect(subject.check_win(1)).to eql(true)
+      end
+
+      it "returns true for vertical win" do
+        subject.multi_move(1, 2, 1, 2, 1, 2, 1)
+        expect(subject.check_win(1)).to eql(true)
+      end 
+
+      it "returns true for diagonal win" do
+        subject.multi_move(1, 2, 2, 3, 3, 4, 3, 4, 5, 4, 4)
+        expect(subject.check_win(1)).to eql(true)
       end
 
     end
@@ -194,6 +204,22 @@ describe Game do
     context "win condition is false" do
 
     end
+  end
+
+  describe "#check_four" do
+
+    it "returns win value when passed an array with 4 consecutive values" do
+      expect(subject.check_four([1, 2, 2, 1, 1, 1, 1])).to eql(1)
+    end
+
+    it "returns nil when passed an array without 4 consecutive values" do
+      expect(subject.check_four([1, 2, 1, 1, 1, 2, 2])). to eql(nil)
+    end
+
+    it "returns nil when passes an array with length less than 4" do
+      expect(subject.check_four([1,1,1])).to eql(nil)
+    end
+
   end
 
 end

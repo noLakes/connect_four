@@ -67,8 +67,24 @@ class Game
     @turn == 1 ? @turn = 2 : @turn = 1
   end
 
-  def check_win
+  def check_win(player)
+
+  end
+
+  def check_four(arry)
+    return nil if arry.length < 4
+    count = []
     
+    arry.each do |val|
+      if count.length.zero? || count[-1] == val
+        count << val
+      else
+        count = []
+        count << val
+      end
+      break if count.length >= 4
+    end
+    count.length >= 4 ? count[0] : nil
   end
 
 end
