@@ -184,19 +184,19 @@ describe Game do
 
     context "win condition is true" do
       
-      it "returns true for horizontal win" do
+      it "returns winner for horizontal win" do
         subject.multi_move(1, 1, 2, 1, 3, 1, 4)
-        expect(subject.check_win(1)).to eql(true)
+        expect(subject.check_win).to eql('O')
       end
 
-      it "returns true for vertical win" do
+      it "returns winner for vertical win" do
         subject.multi_move(1, 2, 1, 2, 1, 2, 1)
-        expect(subject.check_win(1)).to eql(true)
+        expect(subject.check_win).to eql('O')
       end 
 
-      it "returns true for diagonal win" do
+      it "returns winner for diagonal win" do
         subject.multi_move(1, 2, 2, 3, 3, 4, 3, 4, 5, 4, 4)
-        expect(subject.check_win(1)).to eql(true)
+        expect(subject.check_win).to eql('O')
       end
 
     end
@@ -220,6 +220,69 @@ describe Game do
       expect(subject.check_four([1,1,1])).to eql(nil)
     end
 
+  end
+
+  describe "#get_rows" do
+
+    it "returns no arrays when all rows are empty" do
+      expect(subject.get_rows.length).to eql(0)
+    end
+
+    it "returns an array for all rows containing tokens" do
+      6.times { subject.place_token(1) }
+      target = subject.get_rows
+      expect(target.length).to eql(6)
+      expect(target).to all(be_an(Array))
+
+    end
+
+    it "returns each row accuratly" do
+      subject.place_token(1)
+      subject.place_token(4)
+      subject.place_token(7)
+      goal = ['O', nil, nil, 'O', nil, nil, 'O']
+      expect(subject.get_rows).to include(goal)
+    end
+  end
+
+  describe "#get_columns" do
+
+    it "returns no arrays when all columns are empty" do
+      expect(subject.get_columns.length).to eql(0)
+    end
+
+    it "returns an array for all columns containing tokens" do
+      6.times { |i| subject.place_token(i+1) }
+      target = subject.get_columns
+      expect(target.length).to eql(6)
+      expect(target).to all(be_an(Array))
+    end
+
+    it "returns each column accuratly" do
+      4.times { subject.place_token(1) }
+      goal = ['O', 'O', 'O', 'O', nil, nil]
+      expect(subject.get_columns).to include(goal)
+    end
+  end
+
+  describe "#get_diagonals" do
+
+    it "returns no arrays when all diagonals are empty" do
+      expect(subject.get_diagonals.length).to eql(0)
+    end
+
+    it "returns an array for all diagonals containing tokens" do
+      4.times { |i| subject.place_token(i+1) }
+      target = subject.get_columns
+      expect(target.length).to eql(4)
+      expect(target).to all(be_an(Array))
+    end
+
+    it "returns each column accuratly" do
+      subject.multi_move(1, 2, 2, 3, 3, 4, 3, 4, 4, 5, 4)
+      goal = ['O', 'O', 'O', 'O', nil, nil]
+      expect(subject.get_diagonals).to include(goal)
+    end
   end
 
 end

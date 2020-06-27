@@ -1,6 +1,21 @@
 
 class Game
-  attr_reader :board, :players, :turn
+  attr_reader :board, :players, :turn, :DIAGONALS
+
+  DIAGONALS = [
+    [[3, 1], [4, 2], [5, 3], [6, 4]],
+    [[2, 1], [3, 2], [4, 3], [5, 4], [6, 5]],
+    [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6]],
+    [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7]],
+    [[1, 3], [2, 4], [3, 5], [4, 6], [5, 7]],
+    [[1, 4], [2, 5], [3, 6], [4, 7]],
+    [[1, 4], [2, 3], [3, 2], [4, 1]],
+    [[1, 5], [2, 4], [3, 3], [4, 2], [5, 1]],
+    [[1, 6], [2, 5], [3, 4], [4, 3], [5, 2], [6, 1]],
+    [[1, 7], [2, 6], [3, 5], [4, 4], [5, 3], [6, 2]],
+    [[2, 7], [3, 6], [4, 5], [5, 4], [6, 3]],
+    [[3, 7], [4, 6], [5, 5], [6, 4]]
+  ]
 
   def initialize(player_1 = 'O', player_2 = 'X')
     @board = build_board
@@ -67,8 +82,14 @@ class Game
     @turn == 1 ? @turn = 2 : @turn = 1
   end
 
-  def check_win(player)
-
+  def check_win
+    test = [get_rows, get_columns, get_diagonals].flatten(1)
+    result = nil
+    test.each do |array|
+      result = check_four(array)
+      break if !result.nil?
+    end
+    result
   end
 
   def check_four(arry)
@@ -85,6 +106,39 @@ class Game
       break if count.length >= 4
     end
     count.length >= 4 ? count[0] : nil
+  end
+
+  def get_rows
+    rows = []
+    6.times do |row|
+      container = []
+      7.times do |col|
+        container << @board[[row+1, col+1]]
+      end
+      rows << container unless container.all?(nil)
+    end
+    rows
+  end
+
+  def get_columns
+    columns = []
+    7.times do |col|
+      container = []
+      6.times do |row|
+        container << @board[[row+1, col+1]]
+      end
+      columns << container unless container.all?(nil)
+    end
+    columns
+  end 
+
+  def get_diagonals
+    result = []
+    DIAGONALS.each do |arry|
+      diagonal = arry.map { |val| @board[val] }
+      result << diagonal unless diagonal.all?(nil)
+    end
+    result
   end
 
 end
