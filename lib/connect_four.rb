@@ -65,6 +65,13 @@ class Game
     !@board[[6, column]].nil?
   end
 
+  def pc_move
+    loop do
+      choice = rand(1..7)
+      return choice unless column_full?(choice)
+    end
+  end
+
   def get_move
     puts "Enter a number for column 1-7:"
     loop do
@@ -139,6 +146,45 @@ class Game
       result << diagonal unless diagonal.all?(nil)
     end
     result
+  end
+
+  def play
+    puts "\nwelcome to connect four!"
+    puts "\nyou, the human, will be going first."
+    puts "\n#{self.txt}"
+    turn
+  end
+
+  def turn
+    if @turn == 1
+      place_token(get_move)
+      switch_turn
+    else
+      pc = ['\\', '|', '/']
+      puts "\ncomputer choosing"
+      3.times do |i|
+        sleep 0.3
+        puts "#{pc[i]}"
+      end
+      place_token(pc_move)
+      switch_turn
+    end
+    puts "\n#{self.txt}"
+    win = check_win
+    win.nil? ? self.turn : game_over(win)
+  end
+
+  def game_over(winner)
+    puts "\nGame over! looks like '#{winner}' is the winner."
+    puts "\nplay again? [y/n]"
+    answer = gets.chomp
+    if answer.downcase == 'y'
+      @board = build_board
+      self.play
+    else
+      puts "\nthanks for playing!"
+      exit
+    end
   end
 
 end
